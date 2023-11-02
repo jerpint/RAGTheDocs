@@ -5,10 +5,10 @@ from buster.docparser import get_all_documents
 from buster.documents_manager import DeepLakeDocumentsManager
 from buster.parser import SphinxParser
 from scrapy.crawler import CrawlerProcess
-from scrapy.exceptions import CloseSpider
 from scrapy.utils.project import get_project_settings
 
 from rtd_scraper.tutorial.spiders.docs_spider import DocsSpider
+# from tutorial.spiders.docs_spider import DocsSpider
 
 # When using scrapy it seems to set logging for all apps at DEBUG, so simply shut it off here...
 for name in logging.root.manager.loggerDict:
@@ -16,12 +16,9 @@ for name in logging.root.manager.loggerDict:
     logger.setLevel(logging.INFO)
 
 
-def run_spider(homepage_url, save_directory):
-    #  settings_file_path = 'rtd_scraper.tutorial.settings' # The path seen from top-level, ie. from cfg.py
-    #  os.environ.setdefault('SCRAPY_SETTINGS_MODULE', settings_file_path)
-
+def run_spider(homepage_url, save_directory, target_version=None):
     process = CrawlerProcess(settings=get_project_settings())
-    process.crawl(DocsSpider, homepage_url=homepage_url, save_dir=save_directory)
+    process.crawl(DocsSpider, homepage_url=homepage_url, save_dir=save_directory, target_version=target_version)
 
     # Start the crawling process
     process.start()
@@ -30,11 +27,11 @@ def run_spider(homepage_url, save_directory):
     process.stop()
 
 
-def scrape_rtd(homepage_url, save_directory):
+def scrape_rtd(homepage_url, save_directory, target_version=None):
     # Crawl the website using scrapy
-    run_spider(homepage_url, save_directory=save_directory)
+    run_spider(homepage_url, save_directory=save_directory, target_version=target_version)
 
-    # Convert the .html pages into chunks using Buster's SphinxParser
+    # # Convert the .html pages into chunks using Buster's SphinxParser
     root_dir = os.path.join(save_directory, homepage_url.split("https://")[1])
 
     # root_dir is the folder containing the scraped content e.g. crawled_outputs/buster.readthedocs.io/
@@ -49,23 +46,23 @@ def scrape_rtd(homepage_url, save_directory):
     # Add the source column
     df["source"] = "readthedocs"
 
-    #  #  Initialize the DeepLake vector store
-    #  dm = DeepLakeDocumentsManager(
-    #      vector_store_path=os.path.join(save_directory, "deeplake_store"),
-    #      overwrite=True,
-    #      required_columns=["url", "content", "source", "title"],
-    #  )
-    #
-    #  # Add all embeddings to the vector store
-    #  dm.batch_add(
-    #      df=df,
-    #      batch_size=3000,
-    #      min_time_interval=60,
-    #      num_workers=32,
-    #  )
-    #
+    #  Initialize the DeepLake vector store
+    dm = DeepLakeDocumentsManager(
+        vector_store_path=os.path.join(save_directory, "deeplake_store"),
+        overwrite=True,
+        required_columns=["url", "content", "source", "title"],
+    )
+
+    # Add all embeddings to the vector store
+    dm.batch_add(
+        df=df,
+        batch_size=3000,
+        min_time_interval=60,
+        num_workers=32,
+    )
+
 
 
 if __name__ == "__main__":
-    homepage_url = "https://buster.readthedocs.io/"
-    scrape_rtd(homepage_url=homepage_url, save_directory="outputs/")
+    homepage_url = "https://orion.readthedocs.io/"
+    scrape_rtd(homepage_url=homepage_url, target_version="v0.2.7", save_directory="outputs/")

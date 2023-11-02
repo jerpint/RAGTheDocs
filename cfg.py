@@ -1,5 +1,5 @@
+import os
 import logging
-import sys
 
 from buster.busterbot import Buster, BusterConfig
 from buster.completers import ChatGPTCompleter, DocumentAnswerer
@@ -14,11 +14,17 @@ from rtd_scraper.scrape_rtd import scrape_rtd
 # Set the root logger's level to INFO
 logging.basicConfig(level=logging.INFO)
 
+# Check if an openai key is set as an env. variable
+if os.getenv("OPENAI_API_KEY") is None:
+    print(
+        "Warning: No openai key detected. You can set it with 'export OPENAI_API_KEY=sk-...'."
+    )
 
-homepage_url = "https://buster.readthedocs.io/"
+homepage_url = os.getenv("RTD_URL", "https://orion.readthedocs.io/")
+target_version = os.getenv("RTD_VERSION", "en/stable")
 
-
-scrape_rtd(homepage_url=homepage_url, save_directory="outputs/")
+# scrape and embed content from readthedocs website
+scrape_rtd(homepage_url=homepage_url, save_directory="outputs/", target_version=target_version)
 
 # Disable logging for third-party libraries at DEBUG level
 for name in logging.root.manager.loggerDict:

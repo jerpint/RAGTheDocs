@@ -1,5 +1,4 @@
 import logging
-import os
 from typing import Optional, Tuple
 
 import gradio as gr
@@ -18,12 +17,6 @@ handler = (
 # Set the handler's level to INFO
 handler.setLevel(logging.INFO)
 logging.basicConfig(level=logging.INFO)
-
-# Check if an openai key is set as an env. variable
-if os.getenv("OPENAI_API_KEY") is None:
-    print(
-        "Warning: No openai key detected. You can set it with 'export OPENAI_API_KEY=sk-...'."
-    )
 
 # Typehint for chatbot history
 ChatHistory = list[list[Optional[str], Optional[str]]]
@@ -114,21 +107,21 @@ with demo:
     examples = gr.Examples(
         examples=[
             "How can I install the library?",
-            "How do I deal with noisy data?",
-            "How do I deal with noisy data in 2 words?",
+            "What dependencies are required?",
         ],
         inputs=question,
     )
 
     gr.Markdown(
-        "This application uses GPT to search the docs for relevant info and answer questions."
+        "This app uses [Buster 🤖](github.com/jerpint/buster) and ChatGPT to search the docs for relevant info and answer questions."
     )
 
     response = gr.State()
 
     # fmt: off
-    submit.click(
-        add_user_question,
+    gr.on(
+        triggers=[submit.click, question.submit],
+        fn=add_user_question,
         inputs=[question],
         outputs=[chatbot]
     ).then(
@@ -140,21 +133,6 @@ with demo:
         inputs=[chatbot, response],
         outputs=[chatbot]
     )
-
-    question.submit(
-        add_user_question,
-        inputs=[question],
-        outputs=[chatbot],
-    ).then(
-        chat,
-        inputs=[chatbot],
-        outputs=[chatbot, response]
-    ).then(
-        add_sources,
-        inputs=[chatbot, response],
-        outputs=[chatbot]
-    )
-    # fmt: on
 
 
 demo.queue(concurrency_count=16)
