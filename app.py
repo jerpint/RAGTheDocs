@@ -18,8 +18,8 @@ if os.getenv("OPENAI_API_KEY") is None:
     )
 
 
-homepage_url = os.getenv("RTD_URL", "https://orion.readthedocs.io/")
-target_version = os.getenv("RTD_VERSION", "en/stable")
+homepage_url = os.getenv("RTD_URL") # e.g. "https://orion.readthedocs.io/"
+target_version = os.getenv("RTD_VERSION") # e.g. "en/stable"
 
 # scrape and embed content from readthedocs website
 scrape_rtd(
