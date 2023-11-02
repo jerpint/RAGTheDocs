@@ -62,7 +62,6 @@ class DocsSpider(scrapy.Spider):
             filepath = self.base_dir / parsed_uri.netloc / parsed_uri.path.strip("/")
         filepath.parent.mkdir(parents=True, exist_ok=True)
 
-        print(f"{filepath=}")
         with open(filepath, "wb") as f:
             f.write(response.body)
 

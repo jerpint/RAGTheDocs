@@ -1,4 +1,4 @@
-import logging
+import os
 from typing import Optional, Tuple
 
 import gradio as gr
@@ -6,17 +6,26 @@ import pandas as pd
 from buster.completers import Completion
 from buster.utils import extract_zip
 
+from rtd_scraper.scrape_rtd import scrape_rtd
 import cfg
 from cfg import setup_buster
 
-# Create a handler to control where log messages go (e.g., console, file)
-handler = (
-    logging.StreamHandler()
-)  # Console output, you can change it to a file handler if needed
 
-# Set the handler's level to INFO
-handler.setLevel(logging.INFO)
-logging.basicConfig(level=logging.INFO)
+# Check if an openai key is set as an env. variable
+if os.getenv("OPENAI_API_KEY") is None:
+    print(
+        "Warning: No openai key detected. You can set it with 'export OPENAI_API_KEY=sk-...'."
+    )
+
+
+homepage_url = os.getenv("RTD_URL", "https://orion.readthedocs.io/")
+target_version = os.getenv("RTD_VERSION", "en/stable")
+
+# scrape and embed content from readthedocs website
+scrape_rtd(
+    homepage_url=homepage_url, save_directory="outputs/", target_version=target_version
+)
+
 
 # Typehint for chatbot history
 ChatHistory = list[list[Optional[str], Optional[str]]]
@@ -108,6 +117,7 @@ with demo:
         examples=[
             "How can I install the library?",
             "What dependencies are required?",
+            "Give a brief overview of the library."
         ],
         inputs=question,
     )

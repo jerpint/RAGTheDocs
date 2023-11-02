@@ -1,6 +1,3 @@
-import os
-import logging
-
 from buster.busterbot import Buster, BusterConfig
 from buster.completers import ChatGPTCompleter, DocumentAnswerer
 from buster.formatters.documents import DocumentsFormatterJSON
@@ -11,29 +8,6 @@ from buster.validators import QuestionAnswerValidator, Validator
 
 from rtd_scraper.scrape_rtd import scrape_rtd
 
-# Set the root logger's level to INFO
-logging.basicConfig(level=logging.INFO)
-
-# Check if an openai key is set as an env. variable
-if os.getenv("OPENAI_API_KEY") is None:
-    print(
-        "Warning: No openai key detected. You can set it with 'export OPENAI_API_KEY=sk-...'."
-    )
-
-homepage_url = os.getenv("RTD_URL", "https://orion.readthedocs.io/")
-target_version = os.getenv("RTD_VERSION", "en/stable")
-
-# scrape and embed content from readthedocs website
-scrape_rtd(
-    homepage_url=homepage_url, save_directory="outputs/", target_version=target_version
-)
-
-# Disable logging for third-party libraries at DEBUG level
-for name in logging.root.manager.loggerDict:
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
-
-
 buster_cfg = BusterConfig(
     validator_cfg={
         "unknown_response_templates": [
@@ -43,15 +17,14 @@ buster_cfg = BusterConfig(
         "embedding_model": "text-embedding-ada-002",
         "use_reranking": True,
         "invalid_question_response": "This question does not seem relevant to my current knowledge.",
-        "check_question_prompt": """You are an chatbot answering questions on artificial intelligence.
+        "check_question_prompt": """You are an chatbot answering questions on python libraries.
 
 Your job is to determine wether or not a question is valid, and should be answered.
-More general questions are not considered valid, even if you might know the response.
 A user will submit a question. Respond 'true' if it is valid, respond 'false' if it is invalid.
 
 For example:
 
-Q: What is backpropagation?
+Q: How can I install the library?
 true
 
 Q: What is the meaning of life?
