@@ -22,6 +22,7 @@ homepage_url = os.getenv("READTHEDOCS_URL") # e.g. "https://orion.readthedocs.io
 target_version = os.getenv("READTHEDOCS_VERSION") # e.g. "en/stable"
 
 # scrape and embed content from readthedocs website
+# comment out if already embedded locally to avoid extra costs
 scrape_rtd(
     homepage_url=homepage_url, save_directory="outputs/", target_version=target_version
 )
@@ -101,7 +102,24 @@ def chat(chat_history: ChatHistory) -> Tuple[ChatHistory, Completion]:
 demo = gr.Blocks()
 with demo:
     with gr.Row():
-        gr.Markdown("<h3><center>RAGTheDocs</center></h3>")
+        gr.Markdown("<h1><center>RAGTheDocs</center></h1>")
+
+    gr.Markdown(
+        """
+        ## About
+        RAGTheDocs allows you to ask questions about any documentation hosted on readthedocs.
+        Simply clone this space and point it to the right URL!
+
+        Try it out by asking a question below about [orion](https://orion.readthedocs.io/), an open-source hyperparameter optimization library.
+
+        ## How it works
+        This app uses [Buster 🤖](https://github.com/jerpint/buster) and ChatGPT to search the docs for relevant info and
+        answer questions.
+        View the code on the [project homepage](https://github.com/jerpint/RAGTheDocs)
+        """
+
+    )
+
 
     chatbot = gr.Chatbot()
 
@@ -120,10 +138,6 @@ with demo:
             "Give a brief overview of the library."
         ],
         inputs=question,
-    )
-
-    gr.Markdown(
-        "This app uses [Buster 🤖](github.com/jerpint/buster) and ChatGPT to search the docs for relevant info and answer questions."
     )
 
     response = gr.State()
