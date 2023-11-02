@@ -8,6 +8,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
 from rtd_scraper.tutorial.spiders.docs_spider import DocsSpider
+
 # from tutorial.spiders.docs_spider import DocsSpider
 
 # When using scrapy it seems to set logging for all apps at DEBUG, so simply shut it off here...
@@ -18,7 +19,12 @@ for name in logging.root.manager.loggerDict:
 
 def run_spider(homepage_url, save_directory, target_version=None):
     process = CrawlerProcess(settings=get_project_settings())
-    process.crawl(DocsSpider, homepage_url=homepage_url, save_dir=save_directory, target_version=target_version)
+    process.crawl(
+        DocsSpider,
+        homepage_url=homepage_url,
+        save_dir=save_directory,
+        target_version=target_version,
+    )
 
     # Start the crawling process
     process.start()
@@ -29,7 +35,9 @@ def run_spider(homepage_url, save_directory, target_version=None):
 
 def scrape_rtd(homepage_url, save_directory, target_version=None):
     # Crawl the website using scrapy
-    run_spider(homepage_url, save_directory=save_directory, target_version=target_version)
+    run_spider(
+        homepage_url, save_directory=save_directory, target_version=target_version
+    )
 
     # # Convert the .html pages into chunks using Buster's SphinxParser
     root_dir = os.path.join(save_directory, homepage_url.split("https://")[1])
@@ -62,7 +70,8 @@ def scrape_rtd(homepage_url, save_directory, target_version=None):
     )
 
 
-
 if __name__ == "__main__":
     homepage_url = "https://orion.readthedocs.io/"
-    scrape_rtd(homepage_url=homepage_url, target_version="v0.2.7", save_directory="outputs/")
+    scrape_rtd(
+        homepage_url=homepage_url, target_version="v0.2.7", save_directory="outputs/"
+    )

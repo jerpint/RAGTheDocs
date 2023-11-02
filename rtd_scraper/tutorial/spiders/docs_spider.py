@@ -8,6 +8,7 @@ logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.ERROR)
 
 from urllib.parse import urlparse
 
+
 def extract_domain(url):
     """
     Extract the domain (including subdomains) from a given URL.
@@ -29,7 +30,14 @@ def extract_domain(url):
 class DocsSpider(scrapy.Spider):
     name = "docs"
 
-    def __init__(self, homepage_url: str, save_dir="crawled_pages", target_version=None, *args, **kwargs):
+    def __init__(
+        self,
+        homepage_url: str,
+        save_dir="crawled_pages",
+        target_version=None,
+        *args,
+        **kwargs,
+    ):
         super(DocsSpider, self).__init__(*args, **kwargs)
 
         if not homepage_url.startswith("https://"):

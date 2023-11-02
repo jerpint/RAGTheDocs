@@ -24,7 +24,9 @@ homepage_url = os.getenv("RTD_URL", "https://orion.readthedocs.io/")
 target_version = os.getenv("RTD_VERSION", "en/stable")
 
 # scrape and embed content from readthedocs website
-scrape_rtd(homepage_url=homepage_url, save_directory="outputs/", target_version=target_version)
+scrape_rtd(
+    homepage_url=homepage_url, save_directory="outputs/", target_version=target_version
+)
 
 # Disable logging for third-party libraries at DEBUG level
 for name in logging.root.manager.loggerDict:
