@@ -6,34 +6,54 @@ import pandas as pd
 from buster.completers import Completion
 
 # from embed_docs import embed_rtd_website
-from rtd_scraper.scrape_rtd import scrape_rtd
+# from rtd_scraper.scrape_rtd import scrape_rtd
+from embed_docs import embed_documents
 import cfg
 from cfg import setup_buster
-
-
-# Check if an openai key is set as an env. variable
-if os.getenv("OPENAI_API_KEY") is None:
-    print(
-        "Warning: No openai key detected. You can set it with 'export OPENAI_API_KEY=sk-...'."
-    )
-
-
-homepage_url = os.getenv("READTHEDOCS_URL")  # e.g. "https://orion.readthedocs.io/"
-target_version = os.getenv("READTHEDOCS_VERSION")  # e.g. "en/stable"
-
-# scrape and embed content from readthedocs website
-# comment out if already embedded locally to avoid extra costs
-scrape_rtd(
-    homepage_url=homepage_url, save_directory="outputs/", target_version=target_version
-)
-
 
 # Typehint for chatbot history
 ChatHistory = list[list[Optional[str], Optional[str]]]
 
+
+# Because this is a one-click deploy app, we will be relying on env. variables being set
+openai_api_key = os.getenv("OPENAI_API_KEY")  # Mandatory for app to work
+readthedocs_url = os.getenv("READTHEDOCS_URL")  # Mandatory for app to work as intended
+readthedocs_version = os.getenv("READTHEDOCS_VERSION")
+
+if openai_api_key is None:
+    print(
+        "Warning: No OPENAI_API_KEY detected. Set it with 'export OPENAI_API_KEY=sk-...'."
+    )
+
+if readthedocs_url is None:
+    raise ValueError(
+        "No READTHEDOCS_URL detected. Set it with e.g. 'export READTHEDOCS_URL=https://orion.readthedocs.io/'"
+    )
+
+if readthedocs_version is None:
+    print(
+        """
+    Warning: No READTHEDOCS_VERSION detected. If multiple versions of the docs exist, they will all be scraped.
+    Set it with e.g. 'export READTHEDOCS_VERSION=en/stable'
+    """
+    )
+
+
+# Override to put it anywhere
+save_directory = "outputs/"
+
+# scrape and embed content from readthedocs website
+embed_documents(
+    homepage_url=readthedocs_url,
+    save_directory=save_directory,
+    target_version=readthedocs_version,
+)
+
+# Setup RAG agent
 buster = setup_buster(cfg.buster_cfg)
 
 
+# Setup Gradio app
 def add_user_question(
     user_question: str, chat_history: Optional[ChatHistory] = None
 ) -> ChatHistory:
@@ -157,5 +177,5 @@ with demo:
     )
 
 
-demo.queue(concurrency_count=16)
+demo.queue(concurrency_count=8)
 demo.launch(share=False)

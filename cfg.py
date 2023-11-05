@@ -6,37 +6,7 @@ from buster.retriever import DeepLakeRetriever, Retriever
 from buster.tokenizers import GPTTokenizer
 from buster.validators import QuestionAnswerValidator, Validator
 
-from rtd_scraper.scrape_rtd import scrape_rtd
-
 buster_cfg = BusterConfig(
-    validator_cfg={
-        "unknown_response_templates": [
-            "I'm sorry, but I am an AI language model trained to assist with questions related to AI. I cannot answer that question as it is not relevant to the library or its usage. Is there anything else I can assist you with?",
-        ],
-        "unknown_threshold": 0.85,
-        "embedding_model": "text-embedding-ada-002",
-        "use_reranking": True,
-        "invalid_question_response": "This question does not seem relevant to my current knowledge.",
-        "check_question_prompt": """You are an chatbot answering questions on python libraries.
-
-Your job is to determine wether or not a question is valid, and should be answered.
-A user will submit a question. Respond 'true' if it is valid, respond 'false' if it is invalid.
-
-For example:
-
-Q: How can I install the library?
-true
-
-Q: What is the meaning of life?
-false
-
-A user will submit a question. Respond 'true' if it is valid, respond 'false' if it is invalid.""",
-        "completion_kwargs": {
-            "model": "gpt-3.5-turbo",
-            "stream": False,
-            "temperature": 0,
-        },
-    },
     retriever_cfg={
         "path": "outputs/deeplake_store",
         "top_k": 3,
@@ -86,6 +56,34 @@ A user will submit a question. Respond 'true' if it is valid, respond 'false' if
             "I'm sorry, but I am an AI language model trained to assist with questions related to AI. I cannot answer that question as it is not relevant to the library or its usage. Is there anything else I can assist you with?"
             "Now answer the following question:\n"
         ),
+    },
+    validator_cfg={
+        "unknown_response_templates": [
+            "I'm sorry, but I am an AI language model trained to assist with questions related to AI. I cannot answer that question as it is not relevant to the library or its usage. Is there anything else I can assist you with?",
+        ],
+        "unknown_threshold": 0.85,
+        "embedding_model": "text-embedding-ada-002",
+        "use_reranking": True,
+        "invalid_question_response": "This question does not seem relevant to my current knowledge.",
+        "check_question_prompt": """You are an chatbot answering questions on python libraries.
+
+Your job is to determine wether or not a question is valid, and should be answered.
+A user will submit a question. Respond 'true' if it is valid, respond 'false' if it is invalid.
+
+For example:
+
+Q: How can I install the library?
+true
+
+Q: What is the meaning of life?
+false
+
+A user will submit a question. Respond 'true' if it is valid, respond 'false' if it is invalid.""",
+        "completion_kwargs": {
+            "model": "gpt-3.5-turbo",
+            "stream": False,
+            "temperature": 0,
+        },
     },
 )
 
