@@ -7,7 +7,7 @@ from buster.parser import SphinxParser
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from rtd_scraper.tutorial.spiders.docs_spider import DocsSpider
+from rtd_scraper.tutorial.spiders.docs_spider import DocsSpider, sanitize_url
 
 # from tutorial.spiders.docs_spider import DocsSpider
 
@@ -34,6 +34,10 @@ def run_spider(homepage_url, save_directory, target_version=None):
 
 
 def scrape_rtd(homepage_url, save_directory, target_version=None):
+
+    # adds https:// and trailing backslash
+    homepage_url = sanitize_url(homepage_url)
+
     # Crawl the website using scrapy
     run_spider(
         homepage_url, save_directory=save_directory, target_version=target_version

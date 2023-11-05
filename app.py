@@ -4,8 +4,8 @@ from typing import Optional, Tuple
 import gradio as gr
 import pandas as pd
 from buster.completers import Completion
-from buster.utils import extract_zip
 
+# from embed_docs import embed_rtd_website
 from rtd_scraper.scrape_rtd import scrape_rtd
 import cfg
 from cfg import setup_buster
@@ -18,8 +18,8 @@ if os.getenv("OPENAI_API_KEY") is None:
     )
 
 
-homepage_url = os.getenv("READTHEDOCS_URL") # e.g. "https://orion.readthedocs.io/"
-target_version = os.getenv("READTHEDOCS_VERSION") # e.g. "en/stable"
+homepage_url = os.getenv("READTHEDOCS_URL")  # e.g. "https://orion.readthedocs.io/"
+target_version = os.getenv("READTHEDOCS_VERSION")  # e.g. "en/stable"
 
 # scrape and embed content from readthedocs website
 # comment out if already embedded locally to avoid extra costs
@@ -117,9 +117,7 @@ with demo:
         answer questions.
         View the code on the [project homepage](https://github.com/jerpint/RAGTheDocs)
         """
-
     )
-
 
     chatbot = gr.Chatbot()
 
@@ -135,7 +133,7 @@ with demo:
         examples=[
             "How can I install the library?",
             "What dependencies are required?",
-            "Give a brief overview of the library."
+            "Give a brief overview of the library.",
         ],
         inputs=question,
     )

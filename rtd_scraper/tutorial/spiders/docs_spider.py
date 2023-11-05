@@ -27,21 +27,30 @@ def extract_domain(url):
     return domain
 
 
+def sanitize_url(url: str) -> str:
+    """Adds https:// and trailing backslash."""
+    if not url.startswith("https://"):
+        url = "https://" + url
+
+    if not url.endswith("/"):
+        url = url + "/"
+    return url
+
+
 class DocsSpider(scrapy.Spider):
     name = "docs"
 
     def __init__(
         self,
         homepage_url: str,
-        save_dir="crawled_pages",
+        save_dir="outputs/",
         target_version=None,
         *args,
         **kwargs,
     ):
         super(DocsSpider, self).__init__(*args, **kwargs)
 
-        if not homepage_url.startswith("https://"):
-            homepage_url = "https://" + homepage_url
+        homepage_url = sanitize_url(homepage_url)
 
         self.allowed_domains = [extract_domain(homepage_url)]
         self.start_urls = [homepage_url]
