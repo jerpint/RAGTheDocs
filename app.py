@@ -129,9 +129,14 @@ with demo:
         """
         ## About
         [RAGTheDocs](https://github.com/jerpint/RAGTheDocs) allows you to ask questions about any documentation hosted on readthedocs.
-        Simply clone this space and point it to the right URL!
+        Simply clone this space and set the environment variables:
 
-        Try it out by asking a question below about [orion](https://orion.readthedocs.io/), an open-source hyperparameter optimization library.
+        * `OPENAI_API_KEY` (required): Needed for the app to work, e.g. `sk-...`
+        * `READTHEDOCS_URL` (required): The url of the website you are interested in scraping (must be built with
+        sphinx/readthedocs)
+        * `READTHEDOCS_VERSION` (optional): This is important **only** if there exist multiple versions of the docs (e.g. "en/v0.2.7" or "en/latest"). If left empty, it will scrape all available versions (there can be many for open-source projects!).
+
+        Try it out by asking a question below 👇 about [orion](https://orion.readthedocs.io/), an open-source hyperparameter optimization library.
 
         ## How it works
         This app uses [Buster 🤖](https://github.com/jerpint/buster) and ChatGPT to search the docs for relevant info and
