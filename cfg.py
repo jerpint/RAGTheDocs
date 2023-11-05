@@ -64,8 +64,8 @@ buster_cfg = BusterConfig(
         "unknown_threshold": 0.85,
         "embedding_model": "text-embedding-ada-002",
         "use_reranking": True,
-        "invalid_question_response": "This question does not seem relevant to my current knowledge.",
-        "check_question_prompt": """You are an chatbot answering questions on python libraries.
+        "invalid_question_response": "This question does not seem relevant to my current knowledge. If you think this is a mistake, you can modify the question validation prompt.",
+        "check_question_prompt": """You are an chatbot answering questions on python libraries hosted on readthedocs.
 
 Your job is to determine wether or not a question is valid, and should be answered.
 A user will submit a question. Respond 'true' if it is valid, respond 'false' if it is invalid.
