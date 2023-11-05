@@ -25,8 +25,9 @@ RAGTheDocs is an open-source library that allows you to **one-click deploy** ret
 
 3) Set your environment variables:
 * `OPENAI_API_KEY` (required): Needed for the app to work, e.g. `sk-...`
-* `READTHEDOCS_URL` (required): The url of the website you are interested in scraping
-* `READTHEDOCS_VERSION` (optional): This is important **only** if there exist multiple versions of the docs (e.g. "en/v0.2.7" or "en/latest"). If left empty, it will scrape all available versions (there can be many for open-source projects!).
+* `READTHEDOCS_URL` (required): The url of the website you are interested in scraping (must be built with
+sphinx/readthedocs). e.g. `https://orion.readthedocs.io`
+* `READTHEDOCS_VERSION` (optional): This is important if there exist multiple versions of the docs (e.g. `en/v0.2.7` or `en/latest`). If left empty, it will scrape all available versions (there can be many for open-source projects!).
 
 ## Features 🚀
 

@@ -133,8 +133,8 @@ with demo:
 
         * `OPENAI_API_KEY` (required): Needed for the app to work, e.g. `sk-...`
         * `READTHEDOCS_URL` (required): The url of the website you are interested in scraping (must be built with
-        sphinx/readthedocs)
-        * `READTHEDOCS_VERSION` (optional): This is important **only** if there exist multiple versions of the docs (e.g. "en/v0.2.7" or "en/latest"). If left empty, it will scrape all available versions (there can be many for open-source projects!).
+        sphinx/readthedocs). e.g. `https://orion.readthedocs.io`
+        * `READTHEDOCS_VERSION` (optional): This is important if there exist multiple versions of the docs (e.g. `en/v0.2.7` or `en/latest`). If left empty, it will scrape all available versions (there can be many for open-source projects!).
 
         Try it out by asking a question below 👇 about [orion](https://orion.readthedocs.io/), an open-source hyperparameter optimization library.
 
