@@ -43,6 +43,7 @@ if readthedocs_version is None:
 save_directory = "outputs/"
 
 # scrape and embed content from readthedocs website
+# You only need to embed the first time the app runs, comment it out to skip
 embed_documents(
     homepage_url=readthedocs_url,
     save_directory=save_directory,
@@ -127,7 +128,7 @@ with demo:
     gr.Markdown(
         """
         ## About
-        RAGTheDocs allows you to ask questions about any documentation hosted on readthedocs.
+        [RAGTheDocs](https://github.com/jerpint/RAGTheDocs) allows you to ask questions about any documentation hosted on readthedocs.
         Simply clone this space and point it to the right URL!
 
         Try it out by asking a question below about [orion](https://orion.readthedocs.io/), an open-source hyperparameter optimization library.
